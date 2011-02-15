@@ -25,7 +25,7 @@ byte server[] = { 192,168,0,105 };
 #define MPD_PORT 6600
 
 // how many lines are there on the screen?
-#define SCREEN_LINES   4
+#define SCREEN_LINES   2
 // how many columns, i.e., how many characters can be displayed?
 #define SCREEN_COLUMNS 16
 // how many characters should I reserve for the scroll buffers?
@@ -35,7 +35,7 @@ byte server[] = { 192,168,0,105 };
 
 // scrollBuf contains a buffer of text for each line,
 // which will be scrolled from right to left
-char scrollBuf[SCREEN_LINES][SCROLL_BUF_LEN] = { '\0' };
+char scrollBuf[SCREEN_LINES][SCROLL_BUF_LEN] = { 0 };
 
 #define NUM_STATIONS 10
 #define STOP "Stop"
@@ -142,7 +142,8 @@ void renderDisplay(bool force = false) {
       // by the number of columns) and 0, so that as startPos increases (as the string is scrolled off the screen to the left), 
       uint8_t pBufOffset      = max(SCREEN_COLUMNS - startPos[i], 0);
       uint8_t scrollBufOffset = max(startPos[i] - SCREEN_COLUMNS, 0);
-      uint8_t len = min((SCREEN_COLUMNS - pBufOffset), strlen(scrollBuf[i]));
+      uint8_t len = min((SCREEN_COLUMNS - pBufOffset), strlen(scrollBuf[i]) - scrollBufOffset);
+
 /*      
       Serial.print("min(pBufOffset, strlen(scrollBuf[i])): ");
       Serial.println(len, DEC);
