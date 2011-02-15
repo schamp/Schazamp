@@ -1,0 +1,10 @@
+Bill of Materials
+Design: ChronoBlot
+Author: Andrew Schamp
+Derived from MaceTech ChronoDot (http://www.macetech.com/)
+
+IC1	DS3231 or DS3232 RTC (http://www.maxim-ic.com/datasheet/index.mvp/id/4627 or http://www.maxim-ic.com/datasheet/index.mvp/id/4984/t/al)
+BAT1	CR2032 lithium battery with solder tabs (DigiKey P666-ND)
+C1	0805 0.1uF ceramic capacitor
+R1, R2	Optional 0805 4.7K pullup resistors, 1/8th watt
+J1, J2	1x4 0.1" square pin headers
