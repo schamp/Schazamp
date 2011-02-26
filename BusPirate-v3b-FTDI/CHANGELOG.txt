@@ -1,3 +1,7 @@
 Date:       Who:        Version:  Change:
 01-29-2011  A. Schamp   v0.1      Initial Creation
 01-30-2011  A. Schamp   v0.2      Changed design rules to tent vias, rearranged some names and vias for better-looking silkscreen.
+02-24-2011  A. Schamp   v0.3      Changed headers to Sparkfun's "lock" headers.  
+                                  Changed 2x5 I/O header to shrouded header
+                                  Cleaned up label size and layout
+                                  Fixed labels on back side.
