@@ -1,10 +1,14 @@
-
 #include <SPI.h>
 #include <Ethernet.h>
+#include <EthernetDNS.h>
+#include <Twitter.h>
 #include <LiquidCrystal.h>
 
 // use the pins as specified in the schematic
 LiquidCrystal lcd(2, 3, 4, 5, 6, 7);
+
+#define TWITTER_AUTH_CODE "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+Twitter twitter(TWITTER_AUTH_CODE);
 
 // four bits used by the rotary encoder
 // the analog pins can actually be used as digital IO,
@@ -20,7 +24,7 @@ byte mac[]    = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 byte ip[]     = { 192,168,0,15 };
 
 // IP address of the radio server
-byte server[] = { 192,168,0,105 };
+byte server[] = { 192,168,0,10 };
 // port on the radio server on which MPD is listening
 #define MPD_PORT 6600
 
@@ -31,7 +35,7 @@ byte server[] = { 192,168,0,105 };
 // how many characters should I reserve for the scroll buffers?
 // (note that null terminator limits the actual string length 
 // to one less than this number)
-#define SCROLL_BUF_LEN 64
+#define SCROLL_BUF_LEN 128
 
 // scrollBuf contains a buffer of text for each line,
 // which will be scrolled from right to left
@@ -217,12 +221,34 @@ bool getLine(char* buf, uint8_t len) {
   return true;
 }
 
+// try and post the given message on twitter, print errors to Serial if unsuccessful
+void tweet(const char* msg) {
+  Serial.print("Posting tweet: '");
+  Serial.print(msg);
+  Serial.println("'");
+  if (twitter.post(msg)) {
+    int stat = twitter.wait();
+    if (stat == 200) {
+      Serial.println("Twitter OK.");
+    } else {
+      Serial.print("failed : code ");
+      Serial.println(stat);
+    }
+  } else {
+    Serial.println("twitter connection failed.");
+  }
+}
+
 // the prefix of the response we're looking for, and how long we expect it to be
 #define PREFIX "Title: "
 #define PREFIX_LEN 7
 
 // how many seconds between updates of the currently-playing song
 #define SONG_UPDATE_TIME 5
+
+// this buffer holds the most recent twitter message,
+// so we don't try to send the same message more than once.
+char twitterMsg[SCROLL_BUF_LEN] = { '\0' };
 
 // periodically request current status from the server
 // parse out the current artist and song, and pass it to the scroll buffer
@@ -266,10 +292,24 @@ void updateSongTitle(bool force = false) {
       // copy into the 2nd line of the scroll buffer (index 1), starting with the songName after the prefix
       // copy either the full length of the songline, or at most, the maximum length of the buffer.
       strncpy(scrollBuf[1], songName + PREFIX_LEN, min(strlen(songName + PREFIX_LEN), SCROLL_BUF_LEN - 1));
-
 //      Serial.print("scrollBuf[1]: ");
 //      Serial.println(scrollBuf[1]);
-    }
+
+      // build up a new twitter message, and if it's new, post it.
+      char newTwitterMsg[SCROLL_BUF_LEN] = { '\0' };
+      snprintf(newTwitterMsg, SCROLL_BUF_LEN - 1, "Now playing on station %s: %s", stations[currentStation], (songName + PREFIX_LEN));
+      if (strncmp(newTwitterMsg, twitterMsg, strlen(newTwitterMsg)) != 0) {
+        Serial.print("Tweeting: '");
+        Serial.print(newTwitterMsg);
+        Serial.println("'");
+        tweet(newTwitterMsg);
+        strncpy(twitterMsg, newTwitterMsg, min(strlen(newTwitterMsg), SCROLL_BUF_LEN - 1));        
+//      } else {
+//        Serial.print("Didn't tweet this message: '");
+//        Serial.print(newTwitterMsg);
+//        Serial.println("' : ("); 
+      }
+    } 
   }
 }
 
@@ -309,7 +349,7 @@ void checkDial() {
       // command the radio server to stop the current station      
       radioServer.println("stop");
     } else {
-      // copy the station name into the first line (0 index) of the scroll buffer.	   
+      // copy the station name into the first line (0 index) of the scroll buffer.   
       strncpy(scrollBuf[0], stations[currentStation], min(strlen(stations[currentStation]), SCROLL_BUF_LEN-1));
 //      Serial.print("Starting station: ");
 //      Serial.println(stations[currentStation]);
@@ -351,6 +391,7 @@ void setup() {
   Ethernet.begin(mac, ip);
   // initialize the serial interface
   Serial.begin(9600);
+  
   // initialize the LCD
   lcd.begin(SCREEN_COLUMNS, SCREEN_LINES);
 
@@ -366,7 +407,7 @@ void setup() {
     lcd.setCursor(0, 1);
     lcd.print("success!");
   } else {
-    Serial.println("connection failed.");
+    Serial.println("radio connection failed.");
     lcd.setCursor(0, 1);
     lcd.print("failed.");
   }
