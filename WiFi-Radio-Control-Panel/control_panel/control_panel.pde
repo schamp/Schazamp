@@ -7,8 +7,8 @@
 // use the pins as specified in the schematic
 LiquidCrystal lcd(2, 3, 4, 5, 6, 7);
 
-#define TWITTER_AUTH_CODE "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-Twitter twitter(TWITTER_AUTH_CODE);
+// use your own OAUTH code here:
+Twitter twitter("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 
 // four bits used by the rotary encoder
 // the analog pins can actually be used as digital IO,
@@ -258,7 +258,10 @@ void updateSongTitle(bool force = false) {
 
   static uint32_t nextUpdate = 0;
   uint32_t curSec = millis() / 1000;
-  if ((curSec > nextUpdate) || force) {
+  if ( strncmp(stations[currentStation], STOP, 4) == 0) {
+    memset(scrollBuf[1], '\0', SCROLL_BUF_LEN );   // set full line to blank spaces
+  } else if ((curSec > nextUpdate) || force) { // if it's time to update, or we're forced
+       
     nextUpdate = curSec + SONG_UPDATE_TIME;
 
     // send a command to the radioServer, requesting info about the currently-playing song  
@@ -291,13 +294,14 @@ void updateSongTitle(bool force = false) {
       // offset by PREFIX_LEN bytes, to skip the characters in "Title: " (which we don't want on the display)
       // copy into the 2nd line of the scroll buffer (index 1), starting with the songName after the prefix
       // copy either the full length of the songline, or at most, the maximum length of the buffer.
+      memset(scrollBuf[1], '\0', SCROLL_BUF_LEN );   // set full line to blank spaces
       strncpy(scrollBuf[1], songName + PREFIX_LEN, min(strlen(songName + PREFIX_LEN), SCROLL_BUF_LEN - 1));
 //      Serial.print("scrollBuf[1]: ");
 //      Serial.println(scrollBuf[1]);
 
       // build up a new twitter message, and if it's new, post it.
       char newTwitterMsg[SCROLL_BUF_LEN] = { '\0' };
-      snprintf(newTwitterMsg, SCROLL_BUF_LEN - 1, "Now playing on station %s: %s", stations[currentStation], (songName + PREFIX_LEN));
+      snprintf(newTwitterMsg, SCROLL_BUF_LEN - 1, "Now playing on %s: %s", stations[currentStation], (songName + PREFIX_LEN));
       if (strncmp(newTwitterMsg, twitterMsg, strlen(newTwitterMsg)) != 0) {
         Serial.print("Tweeting: '");
         Serial.print(newTwitterMsg);
@@ -348,8 +352,11 @@ void checkDial() {
 //      Serial.print("stopping station.");
       // command the radio server to stop the current station      
       radioServer.println("stop");
+      memset(scrollBuf[0], '\0', SCROLL_BUF_LEN );   // set full line to blank spaces
+      snprintf(scrollBuf[0], 9, "Stopped.");
     } else {
       // copy the station name into the first line (0 index) of the scroll buffer.   
+      memset(scrollBuf[0], '\0', SCROLL_BUF_LEN);   // set full line to blank spaces
       strncpy(scrollBuf[0], stations[currentStation], min(strlen(stations[currentStation]), SCROLL_BUF_LEN-1));
 //      Serial.print("Starting station: ");
 //      Serial.println(stations[currentStation]);
@@ -391,6 +398,7 @@ void setup() {
   Ethernet.begin(mac, ip);
   // initialize the serial interface
   Serial.begin(9600);
+//  LCD.begin(115200);
   
   // initialize the LCD
   lcd.begin(SCREEN_COLUMNS, SCREEN_LINES);
@@ -398,6 +406,12 @@ void setup() {
   // wait a bit for it all to take
   delay(1000);
 
+//  Serial.print("trying to print to LCD...");
+//  LCD.println("woo!");
+//  Serial.println("done.");
+  
+//  while(1) { }
+  
   // establish a connection to the radioServer.
   Serial.println("connecting...");
   lcd.setCursor(0, 0);
