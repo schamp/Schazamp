@@ -1,0 +1,46 @@
+Partlist
+
+Exported from BusPirate-v3b-ftdi-0.2.brd at 2/20/2011 3:55:31 PM
+
+EAGLE Version 5.10.0 Copyright (c) 1988-2010 CadSoft
+
+Part     Value                           Package      Library         Position (inch)       Orientation
+
+C1       0.1uF                           C0805        rcl             (0.675 0.82)          R90
+C2       0.1uF                           C0805        rcl             (0.465 0.175)         R0
+C3       0.1uf                           C0805        rcl             (0.875 0.065)         R0
+C20      10uF                            SMC_A        rcl             (0.895 0.52)          R0
+C22      1uF                             C0805        rcl             (0.58 0.82)           R270
+C23      1uf                             C0805        rcl             (0.06311 0.892835)    R270
+C24      1uF                             C0805        rcl             (0.27 0.86)           R0
+FTDI     FTDI                            1X06_LOCK    SparkFun        (0.095 0.58)          R270
+I/O      M05X2PTH                        AVR_ICSP     SparkFun        (1.325 0.695)         R180
+IC1      PIC24FJ64GA002-I/SSSS-ALTERNATE SSOP28DB     microchip-pic24 (0.455 0.49)          R270
+IC3      4066D                           SO14         40xx            (1.175 0.245)         R180
+ICSP     M05X1PTH                        1X05         SparkFun        (0.25 0.085)          R0
+LED1                                     CHIP-LED0805 led             (0.36 0.965)          R270
+LED1A                                    CHIP-LED0805 led             (0.36 0.965)          MR90
+LED2                                     CHIP-LED0805 led             (0.72 0.965)          R270
+LED2A                                    CHIP-LED0805 led             (0.72 0.965)          MR90
+LED3                                     CHIP-LED0805 led             (1.135 0.965)         R270
+LED3A                                    CHIP-LED0805 led             (1.135 0.965)         MR90
+R1       2K                              R0805        rcl             (0.33 0.175)          R0
+R2       1K1                             M0805        rcl             (0.17 0.97)           R180
+R10      10K                             M0805        resistor        (0.87 0.77)           R180
+R11      10K                             M0805        resistor        (0.87 0.85)           R180
+R12      10K                             M0805        resistor        (1.075 0.85)          R180
+R13      10K                             M0805        resistor        (1.075 0.77)          R180
+R14      10K                             M0805        resistor        (0.87 0.615)          R180
+R15      10K                             M0805        resistor        (0.87 0.69)           R180
+R16      10K                             M0805        resistor        (1.075 0.615)         R180
+R17      10K                             M0805        resistor        (1.075 0.69)          R180
+R19      10K                             R0805        rcl             (0.875 0.145)         R0
+R20      10K                             R0805        rcl             (0.875 0.22)          R0
+R21      10K                             R0805        rcl             (0.875 0.295)         R0
+R22      10K                             R0805        rcl             (0.875 0.37)          R0
+R23      2K                              R0805        rcl             (0.875 0.445)         R0
+R31      1K1                             M0805        rcl             (0.53 0.96)           R180
+R32      1K1                             M0805        rcl             (0.925 0.96)          R180
+VR2      MIC5205-3.3YM5                  SOT23-5      SparkFun        (0.097362 0.757717)   R90
+VR3      MIC5205-3.3YM5                  SOT23-5      SparkFun        (0.465 0.82)          R270
+VR4      MIC5205-5.0YM5                  SOT23-5      SparkFun        (0.25 0.745)          R0

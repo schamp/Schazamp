@@ -1,0 +1,3 @@
+Date:       Who:        Version:  Change:
+01-29-2011  A. Schamp   v0.1      Initial Creation
+01-30-2011  A. Schamp   v0.2      Changed design rules to tent vias, rearranged some names and vias for better-looking silkscreen.

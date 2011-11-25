@@ -1,0 +1,16 @@
+Bill of Materials
+Design: MintStick
+Author: Andrew Schamp, Jan 21, 2011
+Derived from Adafruit MintyBoost v3.0 (http://www.ladyada.net/make/mintyboost/)
+Provided under Creative Commons Attribution 2.5 license (see LICENSE.txt)
+
+IC1	LT1302 (DIP-8) (http://www.linear.com/pc/productDetail.jsp?navId=H0,C1,C1003,C1042,C1031,C1060,P1029)
+IC1'	8-pin socket
+X1	USB-A female jack
+C1,C4	0.1uF ceramic capacitor
+C2,C3	220uF electrolytic capacitor
+R1,R3	49.9K 1% resistor
+R2,R4	75K 1% resistor
+R5      3.3K 5% resitor
+D1	1N5818 (or similar) diode
+L1	10uH inductor
